@@ -11,14 +11,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function actualizarPantalla() {
     const minutos = Math.floor(tiempoTotalEnSegundos / 60);
-    const segundos = temporizadorActivo % 60;
+    const segundos = tiempoTotalEnSegundos % 60;
     pantallaTemporizador.textContent = `${minutos
       .toString()
       .padStart(2, "0")}:${segundos.toString().padStart(2, "0")}`;
   }
 
   function iniciarTemporizador() {
-    if (!temporizadorActivo) {
+    if (!temporizadorActivo && tiempoTotalEnSegundos > 0) {
       temporizadorActivo = setInterval(() => {
         if (tiempoTotalEnSegundos > 0) {
           tiempoTotalEnSegundos--;
@@ -42,9 +42,15 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   function establecerTiempoInicial() {
-    tiempoTotalEnSegundos =
-      parseInt(inputMinutos.value, 10) * 60 + parseInt(inputSegundos.value, 10);
-    actualizarPantalla();
+    const minutos = parseInt(inputMinutos.value, 10);
+    const segundos = parseInt(inputSegundos.value, 10);
+
+    if (!isNaN(minutos) && !isNaN(segundos) && minutos >= 0 && segundos >= 0) {
+      tiempoTotalEnSegundos = minutos * 60 + segundos;
+      actualizarPantalla();
+    } else {
+      alert("Por favor, ingrese valores válidos para minutos y segundos.");
+    }
   }
 
   botonIniciar.addEventListener("click", () => {
